@@ -6,6 +6,11 @@
   "scripts": {
     "test": "php vendor/bin/phpunit"
   },
+  "autoload": {
+    "psr-4": {
+      "PHPAssert\\Core\\": "src/PHPAssert/Core/"
+    }
+  },
   "authors": [
     {
       "name": "Thomas Farla",
