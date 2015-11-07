@@ -21,7 +21,7 @@ class SingleResultTest extends \PHPUnit_Framework_TestCase
 
     function testIsFailure()
     {
-        $result = new SingleResult(new \Exception());
+        $result = new SingleResult(new \AssertionError());
         $this->assertFalse($result->isSuccess());
     }
 
@@ -31,10 +31,10 @@ class SingleResultTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals([$result], $result->toArray());
     }
 
-    function testGetException()
+    function testGetError()
     {
-        $exception = new \Exception();
-        $result = new SingleResult($exception);
-        $this->assertSame($exception, $result->getException());
+        $error = new \AssertionError();
+        $result = new SingleResult($error);
+        $this->assertSame($error, $result->getError());
     }
 }

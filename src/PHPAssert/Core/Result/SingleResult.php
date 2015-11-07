@@ -4,16 +4,16 @@ namespace PHPAssert\Core\Result;
 
 class SingleResult implements Result
 {
-    private $exception;
+    private $error;
 
-    function __construct(\Exception $exception = null)
+    function __construct(\AssertionError $error = null)
     {
-        $this->exception = $exception;
+        $this->error = $error;
     }
 
-    function isSuccess(): bool
+    function isSuccess(): \bool
     {
-        return $this->exception === null;
+        return $this->error === null;
     }
 
     function toArray(): array
@@ -21,8 +21,8 @@ class SingleResult implements Result
         return [$this];
     }
 
-    function getException()
+    function getError()
     {
-        return $this->exception;
+        return $this->error;
     }
 }
