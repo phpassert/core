@@ -4,7 +4,7 @@
   "minimum-stability": "alpha",
   "license": "MIT",
   "scripts": {
-    "test": "php vendor/bin/phpunit tests"
+    "test": "php vendor/bin/phpunit"
   },
   "authors": [
     {
