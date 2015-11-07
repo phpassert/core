@@ -1,0 +1,15 @@
+{
+  "name": "phpassert/core",
+  "description": "The core of phpassert",
+  "minimum-stability": "alpha",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Thomas Farla",
+      "email": "thomas@farla.io"
+    }
+  ],
+  "require": {
+    "php": ">=7.0.0"
+  }
+}
