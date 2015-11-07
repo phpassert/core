@@ -3,6 +3,9 @@
   "description": "The core of phpassert",
   "minimum-stability": "alpha",
   "license": "MIT",
+  "scripts": {
+    "test": "php vendor/bin/phpunit tests"
+  },
   "authors": [
     {
       "name": "Thomas Farla",
@@ -11,5 +14,8 @@
   ],
   "require": {
     "php": ">=7.0.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "5.0.*"
   }
 }
