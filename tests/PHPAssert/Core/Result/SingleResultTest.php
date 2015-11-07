@@ -2,10 +2,17 @@
 namespace unit\PHPAssert\Core\Result;
 
 
-use PHPAssert\Core\Result\SingleResult;
+use PHPAssert\Core\Result\{
+    SingleResult, Result
+};
 
 class SingleResultTest extends \PHPUnit_Framework_TestCase
 {
+    function testImplementsResult()
+    {
+        $this->assertInstanceOf(Result::class, new SingleResult());
+    }
+
     function testIsSuccess()
     {
         $result = new SingleResult();

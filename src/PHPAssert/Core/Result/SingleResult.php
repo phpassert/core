@@ -2,7 +2,7 @@
 namespace PHPAssert\Core\Result;
 
 
-class SingleResult
+class SingleResult implements Result
 {
     private $exception;
 
@@ -11,12 +11,12 @@ class SingleResult
         $this->exception = $exception;
     }
 
-    function isSuccess()
+    function isSuccess(): bool
     {
         return $this->exception === null;
     }
 
-    function toArray()
+    function toArray(): array
     {
         return [$this];
     }
