@@ -13,6 +13,11 @@ class FunctionTest
         $this->function = $function;
     }
 
+    function toArray(): array
+    {
+        return [$this];
+    }
+
     function execute()
     {
         $error = $this->tryExecute();

@@ -45,4 +45,11 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($reflector->getName(), $result->getName());
     }
+
+    function testToArray()
+    {
+        $test = new FunctionTest(function () {
+        });
+        $this->assertEquals([$test], $test->toArray());
+    }
 }
