@@ -15,15 +15,20 @@ class FunctionTest
 
     function execute()
     {
+        $error = $this->tryExecute();
+        $reflector = new \ReflectionFunction($this->function);
+        $name = $reflector->getName();
+        return new SingleResult(new ExecutionInfo($name, $error));
+    }
+
+    private function tryExecute()
+    {
         try {
             $function = $this->function;
             $function();
-        } catch (\AssertionError $e) {
-            $error = $e;
+        } catch (\AssertionError $error) {
         } finally {
-            $reflector = new \ReflectionFunction($this->function);
-            $name = $reflector->getName();
-            return new SingleResult(new ExecutionInfo($name, $error ?? null));
+            return $error ?? null;
         }
     }
 }
