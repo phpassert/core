@@ -2,11 +2,29 @@
 namespace PHPAssert\Core\Result;
 
 
-interface Result
+class Result
 {
-    function isSuccess(): \bool;
+    private $error;
+    private $name;
 
-    function toArray(): array;
+    function __construct(\string $name, \AssertionError $error = null)
+    {
+        $this->error = $error;
+        $this->name = $name;
+    }
 
-    function getName(): \string;
+    function isSuccess(): \bool
+    {
+        return $this->error === null;
+    }
+
+    function toArray(): array
+    {
+        return [$this];
+    }
+
+    function getName(): \string
+    {
+        return $this->name;
+    }
 }

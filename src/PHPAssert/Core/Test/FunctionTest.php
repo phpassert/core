@@ -2,7 +2,7 @@
 namespace PHPAssert\Core\Test;
 
 
-use PHPAssert\Core\Result\SingleResult;
+use PHPAssert\Core\Result\Result;
 
 class FunctionTest
 {
@@ -18,7 +18,7 @@ class FunctionTest
         $error = $this->tryExecute();
         $reflector = new \ReflectionFunction($this->function);
         $name = $reflector->getName();
-        return new SingleResult($name, $error);
+        return new Result($name, $error);
     }
 
     private function tryExecute()
