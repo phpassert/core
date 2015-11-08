@@ -42,8 +42,7 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
 
         $test = new FunctionTest($stubName);
         $result = $test->execute();
-        $info = $result->getInfo();
 
-        $this->assertSame($reflector->getName(), $info->getName());
+        $this->assertSame($reflector->getName(), $result->getName());
     }
 }

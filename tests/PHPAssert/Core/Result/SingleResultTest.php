@@ -4,52 +4,37 @@ namespace unit\PHPAssert\Core\Result;
 
 use PHPAssert\Core\Result\Result;
 use PHPAssert\Core\Result\SingleResult;
-use PHPAssert\Core\Test\ExecutionInfo;
 use unit\PHPAssert\Core\TestCase\TestCase;
 
 class SingleResultTest extends TestCase
 {
-    /**
-     * @dataProvider executionInfoProvider
-     */
-    function testImplementsResult(ExecutionInfo $info)
+    function testImplementsResult()
     {
-        $this->assertInstanceOf(Result::class, new SingleResult($info));
+        $this->assertInstanceOf(Result::class, new SingleResult('f'));
     }
 
-    /**
-     * @dataProvider executionInfoProvider
-     */
-    function testIsSuccess(ExecutionInfo $info)
+    function testIsSuccess()
     {
-        $result = new SingleResult($info);
+        $result = new SingleResult('f');
         $this->assertTrue($result->isSuccess());
     }
 
-    /**
-     * @dataProvider failedExecutionInfoProvider
-     */
-    function testIsFailure(ExecutionInfo $info)
+    function testIsFailure()
     {
-        $result = new SingleResult($info);
+        $result = new SingleResult('f', new \AssertionError());
         $this->assertFalse($result->isSuccess());
     }
 
-    /**
-     * @dataProvider executionInfoProvider
-     */
-    function testToArray(ExecutionInfo $info)
+    function testToArray()
     {
-        $result = new SingleResult($info);
+        $result = new SingleResult('f');
         $this->assertEquals([$result], $result->toArray());
     }
 
-    /**
-     * @dataProvider executionInfoProvider
-     */
-    function testGetInfo(ExecutionInfo $info)
+    function testGetName()
     {
-        $result = new SingleResult($info);
-        $this->assertSame($info, $result->getInfo());
+        $name = 'f';
+        $result = new SingleResult($name);
+        $this->assertSame($name, $result->getName());
     }
 }

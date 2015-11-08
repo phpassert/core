@@ -6,16 +6,18 @@ use PHPAssert\Core\Test\ExecutionInfo;
 
 class SingleResult implements Result
 {
-    private $executionInfo;
+    private $error;
+    private $name;
 
-    function __construct(ExecutionInfo $executionInfo)
+    function __construct(\string $name, \AssertionError $error = null)
     {
-        $this->executionInfo = $executionInfo;
+        $this->error = $error;
+        $this->name = $name;
     }
 
     function isSuccess(): \bool
     {
-        return $this->executionInfo->getError() === null;
+        return $this->error === null;
     }
 
     function toArray(): array
@@ -23,8 +25,8 @@ class SingleResult implements Result
         return [$this];
     }
 
-    function getInfo(): ExecutionInfo
+    function getName(): \string
     {
-        return $this->executionInfo;
+        return $this->name;
     }
 }

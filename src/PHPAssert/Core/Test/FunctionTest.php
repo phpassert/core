@@ -18,7 +18,7 @@ class FunctionTest
         $error = $this->tryExecute();
         $reflector = new \ReflectionFunction($this->function);
         $name = $reflector->getName();
-        return new SingleResult(new ExecutionInfo($name, $error));
+        return new SingleResult($name, $error);
     }
 
     private function tryExecute()
