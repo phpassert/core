@@ -15,15 +15,17 @@ class FunctionTest
 
     function execute()
     {
+        $start = microtime(true);
         try {
             $function = $this->function;
             $function();
         } catch (\AssertionError $e) {
             $error = $e;
         } finally {
-            // TODO: Fill in real info
-            $info = new ExecutionInfo('', 10, $error ?? null);
-            return new SingleResult($info);
+            $duration = (int)((microtime(true) - $start) * 1000);
+            $reflector = new \ReflectionFunction($this->function);
+            $name = $reflector->getName();
+            return new SingleResult(new ExecutionInfo($name, $duration, $error ?? null));
         }
     }
 }
