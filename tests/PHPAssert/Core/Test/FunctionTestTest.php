@@ -46,17 +46,4 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($reflector->getName(), $info->getName());
     }
-
-    function testExecutionShouldCollectDuration()
-    {
-        $ms = 10;
-        $test = new FunctionTest(function() use($ms) {
-            usleep($ms * 1100);
-        });
-
-        $result = $test->execute();
-        $info = $result->getInfo();
-
-        $this->assertGreaterThan($ms, $info->getDurationInMS());
-    }
 }

@@ -9,14 +9,14 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     function executionInfoProvider()
     {
         return [
-            [new ExecutionInfo('function', 10)]
+            [new ExecutionInfo('function')]
         ];
     }
 
     function failedExecutionInfoProvider()
     {
         return [
-            [new ExecutionInfo('function', 10, new \AssertionError('failed'))]
+            [new ExecutionInfo('function', new \AssertionError('failed'))]
         ];
     }
 }

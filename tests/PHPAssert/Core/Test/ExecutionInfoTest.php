@@ -13,19 +13,13 @@ class ExecutionInfoTest extends \PHPUnit_Framework_TestCase
     function setUp()
     {
         $this->name = 'function name';
-        $this->duration = 2;
         $this->error = new \AssertionError('something went wrong');
-        $this->info = new ExecutionInfo($this->name, $this->duration, $this->error);
+        $this->info = new ExecutionInfo($this->name, $this->error);
     }
 
     function testGetName()
     {
         $this->assertSame($this->name, $this->info->getName());
-    }
-
-    function testGetDuration()
-    {
-        $this->assertSame($this->duration, $this->info->getDurationInMS());
     }
 
     function testGetError()
