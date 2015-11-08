@@ -8,7 +8,8 @@
   },
   "autoload": {
     "psr-4": {
-      "PHPAssert\\Core\\": "src/PHPAssert/Core/"
+      "PHPAssert\\Core\\": "src/PHPAssert/Core/",
+      "unit\\PHPAssert\\Core\\": "tests/PHPAssert/Core/"
     }
   },
   "authors": [

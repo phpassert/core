@@ -2,9 +2,11 @@
 namespace PHPAssert\Core\Result;
 
 
+use PHPAssert\Core\Test\ExecutionInfo;
+
 interface Result
 {
     function isSuccess(): \bool;
     function toArray(): array;
-    function getError();
+    function getInfo(): ExecutionInfo;
 }

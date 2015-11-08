@@ -2,18 +2,20 @@
 namespace PHPAssert\Core\Result;
 
 
+use PHPAssert\Core\Test\ExecutionInfo;
+
 class SingleResult implements Result
 {
-    private $error;
+    private $executionInfo;
 
-    function __construct(\AssertionError $error = null)
+    function __construct(ExecutionInfo $executionInfo)
     {
-        $this->error = $error;
+        $this->executionInfo = $executionInfo;
     }
 
     function isSuccess(): \bool
     {
-        return $this->error === null;
+        return $this->executionInfo->getError() === null;
     }
 
     function toArray(): array
@@ -21,8 +23,8 @@ class SingleResult implements Result
         return [$this];
     }
 
-    function getError()
+    function getInfo(): ExecutionInfo
     {
-        return $this->error;
+        return $this->executionInfo;
     }
 }

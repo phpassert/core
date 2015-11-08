@@ -2,39 +2,54 @@
 namespace unit\PHPAssert\Core\Result;
 
 
-use PHPAssert\Core\Result\{
-    SingleResult, Result
-};
+use PHPAssert\Core\Result\Result;
+use PHPAssert\Core\Result\SingleResult;
+use PHPAssert\Core\Test\ExecutionInfo;
+use unit\PHPAssert\Core\TestCase\TestCase;
 
-class SingleResultTest extends \PHPUnit_Framework_TestCase
+class SingleResultTest extends TestCase
 {
-    function testImplementsResult()
+    /**
+     * @dataProvider executionInfoProvider
+     */
+    function testImplementsResult(ExecutionInfo $info)
     {
-        $this->assertInstanceOf(Result::class, new SingleResult());
+        $this->assertInstanceOf(Result::class, new SingleResult($info));
     }
 
-    function testIsSuccess()
+    /**
+     * @dataProvider executionInfoProvider
+     */
+    function testIsSuccess(ExecutionInfo $info)
     {
-        $result = new SingleResult();
+        $result = new SingleResult($info);
         $this->assertTrue($result->isSuccess());
     }
 
-    function testIsFailure()
+    /**
+     * @dataProvider failedExecutionInfoProvider
+     */
+    function testIsFailure(ExecutionInfo $info)
     {
-        $result = new SingleResult(new \AssertionError());
+        $result = new SingleResult($info);
         $this->assertFalse($result->isSuccess());
     }
 
-    function testToArray()
+    /**
+     * @dataProvider executionInfoProvider
+     */
+    function testToArray(ExecutionInfo $info)
     {
-        $result = new SingleResult();
+        $result = new SingleResult($info);
         $this->assertEquals([$result], $result->toArray());
     }
 
-    function testGetError()
+    /**
+     * @dataProvider executionInfoProvider
+     */
+    function testGetInfo(ExecutionInfo $info)
     {
-        $error = new \AssertionError();
-        $result = new SingleResult($error);
-        $this->assertSame($error, $result->getError());
+        $result = new SingleResult($info);
+        $this->assertSame($info, $result->getInfo());
     }
 }

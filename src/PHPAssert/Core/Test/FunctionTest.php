@@ -16,13 +16,14 @@ class FunctionTest
     function execute()
     {
         try {
-            $error = null;
             $function = $this->function;
             $function();
         } catch (\AssertionError $e) {
             $error = $e;
         } finally {
-            return new SingleResult($error);
+            // TODO: Fill in real info
+            $info = new ExecutionInfo('', 10, $error ?? null);
+            return new SingleResult($info);
         }
     }
 }
