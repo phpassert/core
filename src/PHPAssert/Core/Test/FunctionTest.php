@@ -4,7 +4,7 @@ namespace PHPAssert\Core\Test;
 
 use PHPAssert\Core\Result\Result;
 
-class FunctionTest
+class FunctionTest implements Test
 {
     private $function;
 
@@ -13,7 +13,7 @@ class FunctionTest
         $this->function = $function;
     }
 
-    function execute()
+    function execute(): array
     {
         $error = $this->tryExecute();
         $name = $this->getFunctionName();

@@ -4,6 +4,7 @@ namespace unit\PHPAssert\Core\Test;
 
 use PHPAssert\Core\Result\Result;
 use PHPAssert\Core\Test\FunctionTest;
+use PHPAssert\Core\Test\Test;
 
 function testFake()
 {
@@ -12,6 +13,12 @@ function testFake()
 
 class FunctionTestTest extends \PHPUnit_Framework_TestCase
 {
+    function testImplementsTest()
+    {
+        $test = new FunctionTest('time');
+        $this->assertInstanceOf(Test::class, $test);
+    }
+
     function testExecuteShouldReturnArrayOfResults()
     {
         $test = new FunctionTest('time');

@@ -4,7 +4,7 @@
 use Underscore\Types\Arrays;
 use Underscore\Types\Strings;
 
-class ClassTest
+class ClassTest implements Test
 {
     private $class;
 

@@ -4,9 +4,16 @@ namespace unit\PHPAssert\Core\Test;
 
 use PHPAssert\Core\Result\Result;
 use PHPAssert\Core\Test\ClassTest;
+use PHPAssert\Core\Test\Test;
 
 class ClassTestTest extends \PHPUnit_Framework_TestCase
 {
+    function testImplementsTest()
+    {
+        $test = new ClassTest(new class() {});
+        $this->assertInstanceOf(Test::class, $test);
+    }
+
     /**
      * @dataProvider classProvider
      */
