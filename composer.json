@@ -4,7 +4,8 @@
   "minimum-stability": "alpha",
   "license": "MIT",
   "scripts": {
-    "test": "php vendor/bin/phpunit"
+    "test": "php vendor/bin/phpunit",
+    "test:coverage": "phpdbg -qrr ./vendor/bin/phpunit --coverage-html coverage"
   },
   "autoload": {
     "psr-4": {
