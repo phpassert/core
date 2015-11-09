@@ -19,19 +19,54 @@ class ClassTestTest extends \PHPUnit_Framework_TestCase
 
     function classProvider()
     {
-        $noMethods = new class() {};
-        $oneMethod = new class() {
-            function testMethod() {}
+        $noMethods = new class()
+        {
         };
-        $twoMethods = new class() {
-            function testMethod() {}
-            function testOtherMethod() {}
+        $oneMethod = new class()
+        {
+            function testMethod()
+            {
+            }
+        };
+        $twoMethods = new class()
+        {
+            function testMethod()
+            {
+            }
+
+            function otherMethodTest()
+            {
+            }
+
+            function notATestMethod()
+            {
+
+            }
+        };
+
+        $ignoreMethods = new class()
+        {
+            private function testSomething()
+            {
+
+            }
+
+            static function testDoSomething()
+            {
+
+            }
+
+            function notATestMethod()
+            {
+
+            }
         };
 
         return [
             [$noMethods, []],
             [$oneMethod, [new Result('testMethod')]],
-            [$twoMethods, [new Result('testMethod'), new Result('testOtherMethod')]]
+            [$twoMethods, [new Result('testMethod'), new Result('otherMethodTest')]],
+            [$ignoreMethods, []]
         ];
     }
 }
