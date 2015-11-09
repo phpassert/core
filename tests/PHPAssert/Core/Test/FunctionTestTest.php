@@ -12,16 +12,16 @@ function testFake()
 
 class FunctionTestTest extends \PHPUnit_Framework_TestCase
 {
-    function testExecuteShouldReturnResult()
+    function testExecuteShouldReturnArrayOfResults()
     {
         $test = new FunctionTest('time');
-        $this->assertInstanceOf(Result::class, $test->execute());
+        $this->assertContainsOnlyInstancesOf(Result::class, $test->execute());
     }
 
     function testExecuteShouldHavePassingResult()
     {
         $test = new FunctionTest('time');
-        $result = $test->execute();
+        $result = $test->execute()[0];
         $this->assertTrue($result->isSuccess());
     }
 
@@ -31,7 +31,7 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
             assert(false);
         });
 
-        $result = $test->execute();
+        $result = $test->execute()[0];
         $this->assertFalse($result->isSuccess());
     }
 
@@ -41,7 +41,7 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
         $reflector = new \ReflectionFunction($stubName);
 
         $test = new FunctionTest($stubName);
-        $result = $test->execute();
+        $result = $test->execute()[0];
 
         $this->assertSame($reflector->getName(), $result->getName());
     }

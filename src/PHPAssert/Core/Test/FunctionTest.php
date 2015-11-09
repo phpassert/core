@@ -16,19 +16,30 @@ class FunctionTest
     function execute()
     {
         $error = $this->tryExecute();
-        $reflector = new \ReflectionFunction($this->function);
-        $name = $reflector->getName();
-        return new Result($name, $error);
+        $name = $this->getFunctionName();
+        return [new Result($name, $error)];
     }
 
     private function tryExecute()
     {
         try {
-            $function = $this->function;
-            $function();
+            $this->getReflector()->invoke();
         } catch (\AssertionError $error) {
         } finally {
             return $error ?? null;
         }
+    }
+
+    private function getFunctionName()
+    {
+        $reflector = $this->getReflector();
+        return $reflector->getName();
+    }
+
+    private function getReflector()
+    {
+        return is_array($this->function)
+            ? new \ReflectionMethod($this->function[0], $this->function[1])
+            : new \ReflectionFunction($this->function);
     }
 }
