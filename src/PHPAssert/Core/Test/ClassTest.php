@@ -16,19 +16,8 @@ class ClassTest
     function execute(): array
     {
         $this->tryExecute('beforeClass');
-
-        $results = array_map(function (\ReflectionMethod $method) {
-            $test = new FunctionTest([$this->class, $method->getName()]);
-
-            $this->tryExecute('beforeMethod');
-
-            $results = $test->execute();
-
-            $this->tryExecute('afterMethod');
-            return Arrays::first($results);
-        }, $this->getMethods());
+        $results = array_map([$this, 'executeTestMethod'], $this->getMethods());
         $this->tryExecute('afterClass');
-
         return $results;
     }
 
@@ -37,6 +26,15 @@ class ClassTest
         if (method_exists($this->class, $method)) {
             call_user_func([$this->class, $method]);
         }
+    }
+
+    private function executeTestMethod(\ReflectionMethod $method)
+    {
+        $this->tryExecute('beforeMethod');
+        $test = new FunctionTest([$this->class, $method->getName()]);
+        $results = $test->execute();
+        $this->tryExecute('afterMethod');
+        return Arrays::first($results);
     }
 
     private function getMethods()
