@@ -1,26 +1,42 @@
 <?php namespace PHPAssert\Core\Test;
 
 
+use Underscore\Types\Arrays;
 use Underscore\Types\Strings;
 
 class ClassTest
 {
     private $class;
 
-    function __construct(\string $class)
+    function __construct($class)
     {
-        $this->class = new $class;
+        $this->class = $class;
     }
 
     function execute(): array
     {
-        $methods = $this->getMethods();
+        $this->tryExecute('beforeClass');
+
         $results = array_map(function (\ReflectionMethod $method) {
             $test = new FunctionTest([$this->class, $method->getName()]);
-            return $test->execute();
-        }, $methods);
 
-        return isset($results[0]) ? call_user_func_array('array_merge', $results) : [];
+            $this->tryExecute('beforeMethod');
+
+            $results = $test->execute();
+
+            $this->tryExecute('afterMethod');
+            return Arrays::first($results);
+        }, $this->getMethods());
+        $this->tryExecute('afterClass');
+
+        return $results;
+    }
+
+    private function tryExecute($method)
+    {
+        if (method_exists($this->class, $method)) {
+            call_user_func([$this->class, $method]);
+        }
     }
 
     private function getMethods()
@@ -34,6 +50,6 @@ class ClassTest
     {
         $name = strtolower($method->getName());
         return !$method->isStatic()
-            && (Strings::startsWith($name, 'test') || Strings::endsWith($name, 'test'));
+        && (Strings::startsWith($name, 'test') || Strings::endsWith($name, 'test'));
     }
 }
