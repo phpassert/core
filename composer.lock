@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "df7b6f28311ab8721aecdc3f6377e0d6",
-    "content-hash": "64703c75012157dd8f94021b2332c901",
+    "hash": "36005e85ddb227d6af40c0f75afee4db",
+    "content-hash": "d5d97a0a94b7642d6e7c63a96775355a",
     "packages": [
         {
             "name": "anahkiasen/underscore-php",
@@ -123,6 +123,52 @@
                 "string"
             ],
             "time": "2015-11-06 14:35:42"
+        },
+        {
+            "name": "mikey179/vfsStream",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mikey179/vfsStream.git",
+                "reference": "268fa1b3980adf1c7eb996fc02ce23aa08ed739c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mikey179/vfsStream/zipball/268fa1b3980adf1c7eb996fc02ce23aa08ed739c",
+                "reference": "268fa1b3980adf1c7eb996fc02ce23aa08ed739c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.5"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.6.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "org\\bovigo\\vfs\\": "src/main/php"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Frank Kleine",
+                    "homepage": "http://frankkleine.de/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Virtual file system to mock the real file system in unit tests.",
+            "homepage": "http://vfs.bovigo.org/",
+            "time": "2015-11-09 21:41:24"
         },
         {
             "name": "patchwork/utf8",
@@ -1222,7 +1268,9 @@
     ],
     "aliases": [],
     "minimum-stability": "alpha",
-    "stability-flags": [],
+    "stability-flags": {
+        "mikey179/vfsstream": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
