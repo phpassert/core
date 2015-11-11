@@ -55,6 +55,27 @@ class TestRunnerTest extends \PHPUnit_Framework_TestCase
         $runner->run();
     }
 
+    function testMustCallReport()
+    {
+        $results = [new Result('')];
+        $test = $this->getMock(Test::class);
+        $test->expects($this->once())
+            ->method('execute')
+            ->willReturn($results);
+
+        $discoverer = $this->getMock(Discoverer::class);
+        $discoverer->expects($this->once())
+            ->method('findTests')
+            ->willReturn([$test]);
+
+        $reporter = $this->getMock(Reporter::class);
+        $reporter->expects($this->once())
+            ->method('report')
+            ->with($results);
+        $runner = new Runner($discoverer, $reporter);
+        $runner->run();
+    }
+
     function logTestProvider()
     {
         $class = new class()

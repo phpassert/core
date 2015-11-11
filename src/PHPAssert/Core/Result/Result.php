@@ -27,4 +27,9 @@ class Result
     {
         return $this->name;
     }
+
+    function getError()
+    {
+        return $this->error;
+    }
 }
