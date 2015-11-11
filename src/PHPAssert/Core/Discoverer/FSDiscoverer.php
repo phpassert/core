@@ -2,9 +2,10 @@
 namespace PHPAssert\Core\Discoverer;
 
 
+use PHPAssert\Core\Discoverer\FS\TestFilter;
 use PHPAssert\Core\Test\ClassTest;
 use PHPAssert\Core\Test\FunctionTest;
-use Underscore\Types\Strings;
+use function PHPAssert\Core\Utils\Test\isValidTestName;
 
 class FSDiscoverer implements Discoverer
 {
@@ -15,10 +16,15 @@ class FSDiscoverer implements Discoverer
         $this->root = $root;
     }
 
+    function getRoot()
+    {
+        return $this->root;
+    }
+
     function findTests(): array
     {
         $directory = new \RecursiveDirectoryIterator($this->root);
-        $filter = new FilenameFilter($directory, '/\.php$/i');
+        $filter = new TestFilter($directory, '/\.php$/i');
         $fileNames = [];
         foreach (new \RecursiveIteratorIterator($filter) as $file) {
             if ($file->isFile()) {
@@ -31,58 +37,44 @@ class FSDiscoverer implements Discoverer
         return $this->findTestsInFiles($fileNames);
     }
 
-    function getRoot()
-    {
-        return $this->root;
-    }
-
     private function findTestsInFiles($files)
     {
         $tests = [];
-        foreach (array_merge(get_declared_classes(), get_defined_functions()['user']) as $name) {
-            try {
-                $reflector = new \ReflectionFunction($name);
-            } catch (\ReflectionException $e) {
-                $reflector = new \ReflectionClass($name);
-            } finally {
-                $shortName = strtolower($reflector->getShortName());
-                if (in_array($reflector->getFileName(), $files)
-                    && (Strings::startsWith($shortName, 'test') || Strings::endsWith($shortName, 'test'))
-                ) {
-                    $tests[] = $this->convertReflectorToTest($reflector);
-                }
+        foreach ($this->getDeclaredObjects() as $object) {
+            $reflector = $this->getReflector($object);
+            if ($this->isValidTestFile($reflector, $files)) {
+                $tests[] = $this->convertReflectorToTest($reflector);
             }
         }
 
         return $tests;
     }
 
-    private function convertReflectorToTest($reflector)
+    private function getDeclaredObjects()
+    {
+        return array_merge(get_declared_classes(), get_defined_functions()['user']);
+    }
+
+    private function getReflector(\string $name)
+    {
+        try {
+            return new \ReflectionFunction($name);
+        } catch (\ReflectionException $e) {
+            return new \ReflectionClass($name);
+        }
+    }
+
+    private function isValidTestFile(\Reflector $reflector, array $testFiles)
+    {
+        return in_array($reflector->getFileName(), $testFiles)
+        && isValidTestName($reflector->getShortName());
+    }
+
+    private function convertReflectorToTest(\Reflector $reflector)
     {
         $name = $reflector->getName();
-        return method_exists($reflector, 'isClosure') ? new FunctionTest($name) : new ClassTest(new $name);
-    }
-}
-
-abstract class FilesystemRegexFilter extends \RecursiveRegexIterator
-{
-    protected $regex;
-
-    function __construct(\RecursiveIterator $iterator, $regex)
-    {
-        $this->regex = $regex;
-        parent::__construct($iterator, $regex);
-    }
-}
-
-class FilenameFilter extends FilesystemRegexFilter
-{
-    function accept()
-    {
-        $name = strtolower(pathinfo($this->getFileName())['filename']);
-        return
-            !$this->isFile() ||
-            ((Strings::startsWith($name, 'test') || Strings::endsWith($name, 'test'))
-                && preg_match($this->regex, $this->getFilename()));
+        return method_exists($reflector, 'isClosure')
+            ? new FunctionTest($name)
+            : new ClassTest(new $name);
     }
 }

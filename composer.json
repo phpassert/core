@@ -11,7 +11,8 @@
     "psr-4": {
       "PHPAssert\\Core\\": "src/PHPAssert/Core/",
       "unit\\PHPAssert\\Core\\": "tests/unit//PHPAssert/Core/"
-    }
+    },
+    "files": ["src/PHPAssert/Core/Utils/Test.php"]
   },
   "authors": [
     {
