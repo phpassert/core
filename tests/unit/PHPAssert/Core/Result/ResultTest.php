@@ -31,4 +31,11 @@ class ResultTest extends TestCase
         $result = new Result($name);
         $this->assertSame($name, $result->getName());
     }
+
+    function testGetError()
+    {
+        $error = new \AssertionError();
+        $result = new Result('', $error);
+        $this->assertSame($error, $result->getError());
+    }
 }

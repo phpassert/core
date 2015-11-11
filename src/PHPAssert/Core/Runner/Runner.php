@@ -19,7 +19,9 @@ class Runner
 
     function run(): array
     {
-        return $this->executeTests();
+        $results = $this->executeTests();
+        $this->reporter->report($results);
+        return $results;
     }
 
     private function executeTests(): array
