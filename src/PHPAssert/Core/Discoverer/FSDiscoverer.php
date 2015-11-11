@@ -19,10 +19,8 @@ class FSDiscoverer
     {
         $directory = new \RecursiveDirectoryIterator($this->root);
         $filter = new FilenameFilter($directory, '/\.php$/i');
-        $files = iterator_to_array(new \RecursiveIteratorIterator($filter));
-
         $fileNames = [];
-        foreach ($files as $file) {
+        foreach (new \RecursiveIteratorIterator($filter) as $file) {
             if ($file->isFile()) {
                 $path = $file->getPathName();
                 $fileNames[] = $path;
