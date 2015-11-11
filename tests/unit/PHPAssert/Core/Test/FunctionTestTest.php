@@ -52,4 +52,13 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame($reflector->getName(), $result->getName());
     }
+
+    function testExecuteShouldNotHandleOtherExceptions()
+    {
+        $this->setExpectedException('Exception');
+        $test = new FunctionTest(function() {
+            throw new \Exception();
+        });
+        $test->execute();
+    }
 }
