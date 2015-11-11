@@ -6,7 +6,7 @@ use PHPAssert\Core\Test\ClassTest;
 use PHPAssert\Core\Test\FunctionTest;
 use Underscore\Types\Strings;
 
-class FSDiscoverer
+class FSDiscoverer implements Discoverer
 {
     private $root;
 
@@ -15,7 +15,7 @@ class FSDiscoverer
         $this->root = $root;
     }
 
-    function findTests()
+    function findTests(): array
     {
         $directory = new \RecursiveDirectoryIterator($this->root);
         $filter = new FilenameFilter($directory, '/\.php$/i');

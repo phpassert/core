@@ -3,12 +3,19 @@ namespace integration\PHPAssert\Core\Discoverer;
 
 
 use org\bovigo\vfs\vfsStream;
+use PHPAssert\Core\Discoverer\Discoverer;
 use PHPAssert\Core\Discoverer\FSDiscoverer;
 use PHPAssert\Core\Test\ClassTest;
 use PHPAssert\Core\Test\FunctionTest;
 
 class FilesystemDiscovererTest extends \PHPUnit_Framework_TestCase
 {
+    function testInstanceOfDiscoverer()
+    {
+        $discoverer = new FSDiscoverer(__DIR__);
+        $this->assertInstanceOf(Discoverer::class, $discoverer);
+    }
+
     function testRoot()
     {
         $root = __DIR__;
