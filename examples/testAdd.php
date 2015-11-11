@@ -13,6 +13,11 @@ function testAddVariadic()
     assert($sum === array_sum($numbers));
 }
 
+function testFail()
+{
+    assert(false);
+}
+
 function add(...$numbers)
 {
     return array_sum($numbers);

@@ -1,20 +1,18 @@
 <?php
 
 require_once('bootstrap.php');
+use Symfony\Component\Console\Output\ConsoleOutput;
+use PHPAssert\Core\Discoverer\FSDiscoverer;
+use PHPAssert\Core\Reporter\ConsoleReporter;
+use PHPAssert\Core\Runner\Runner;
 
-$discoverer = new PHPAssert\Core\Discoverer\FSDiscoverer(__DIR__ . DIRECTORY_SEPARATOR . 'examples');
-$tests = $discoverer->findTests();
-//TODO: Implement runner
-echo 'start executing tests' . PHP_EOL;
-$results = array_map(function(\PHPAssert\Core\Test\Test $test) {
-    return $test->execute();
-}, $tests);
+$discoverer = new FSDiscoverer(__DIR__ . DIRECTORY_SEPARATOR . 'examples');
 
-$results = call_user_func_array('array_merge', $results);
-foreach ($results as $result) {
-    if (!$result->isSuccess()) {
-        echo "{$result->getName()} failed" . PHP_EOL;
-    }
-}
+$output = new ConsoleOutput();
+$reporter = new ConsoleReporter($output);
+$runner = new Runner($discoverer, $reporter);
 
-echo 'done running tests' . PHP_EOL;
+$output->writeln('start executing tests');
+$runner->run();
+$output->writeln('');
+$output->writeln('done running tests');
