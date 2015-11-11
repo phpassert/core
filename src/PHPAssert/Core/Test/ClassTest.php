@@ -2,7 +2,7 @@
 
 
 use Underscore\Types\Arrays;
-use Underscore\Types\Strings;
+use function PHPAssert\Core\Utils\Test\isValidTestName;
 
 class ClassTest implements Test
 {
@@ -28,6 +28,13 @@ class ClassTest implements Test
         }
     }
 
+    private function getMethods()
+    {
+        $reflector = new \ReflectionClass($this->class);
+        $methods = $reflector->getMethods(\ReflectionMethod::IS_PUBLIC);
+        return array_filter($methods, [$this, 'isTestMethod']);
+    }
+
     private function executeTestMethod(\ReflectionMethod $method)
     {
         $this->tryExecute('beforeMethod');
@@ -37,17 +44,9 @@ class ClassTest implements Test
         return Arrays::first($results);
     }
 
-    private function getMethods()
-    {
-        $reflector = new \ReflectionClass($this->class);
-        $methods = $reflector->getMethods(\ReflectionMethod::IS_PUBLIC);
-        return array_filter($methods, [$this, 'isTestMethod']);
-    }
-
     private function isTestMethod(\ReflectionMethod $method)
     {
         $name = strtolower($method->getName());
-        return !$method->isStatic()
-        && (Strings::startsWith($name, 'test') || Strings::endsWith($name, 'test'));
+        return !$method->isStatic() && isValidTestName($name);
     }
 }

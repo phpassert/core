@@ -23,10 +23,9 @@ class FunctionTest implements Test
     private function tryExecute()
     {
         try {
-            $this->getReflector()->invoke();
+            call_user_func($this->function);
         } catch (\AssertionError $error) {
-        } finally {
-            return $error ?? null;
+            return $error;
         }
     }
 
