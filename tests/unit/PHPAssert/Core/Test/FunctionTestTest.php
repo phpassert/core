@@ -5,10 +5,19 @@ namespace unit\PHPAssert\Core\Test;
 use PHPAssert\Core\Result\Result;
 use PHPAssert\Core\Test\FunctionTest;
 use PHPAssert\Core\Test\Test;
+use Underscore\Types\Arrays;
 
 function testFake()
 {
     return __FUNCTION__;
+}
+
+class TestFakeClass
+{
+    function testMethod()
+    {
+
+    }
 }
 
 class FunctionTestTest extends \PHPUnit_Framework_TestCase
@@ -51,5 +60,13 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
         $result = $test->execute()[0];
 
         $this->assertSame($reflector->getName(), $result->getName());
+    }
+
+    function testExecuteClassMethod()
+    {
+        $instance = new TestFakeClass();
+        $test = new FunctionTest([$instance, 'testMethod']);
+        $results = $test->execute();
+        $this->assertTrue(Arrays::first($results)->isSuccess());
     }
 }

@@ -4,8 +4,7 @@ namespace PHPAssert\Examples;
 
 class TestCalculator
 {
-    function testAdd()
-    {
-
+    function testAdd() {
     }
 }
+

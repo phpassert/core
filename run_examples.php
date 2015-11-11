@@ -9,13 +9,11 @@ $results = array_map(function(\PHPAssert\Core\Test\Test $test) {
     return $test->execute();
 }, $tests);
 
-//TODO: Implement reporter
 $results = call_user_func_array('array_merge', $results);
-
 foreach ($results as $result) {
     if (!$result->isSuccess()) {
         echo "{$result->getName()} failed";
     }
 }
 
-echo 'done running tests';
+echo 'done running tests' . PHP_EOL;

@@ -60,7 +60,7 @@ class FSDiscoverer implements Discoverer
     private function convertReflectorToTest($reflector)
     {
         $name = $reflector->getName();
-        return method_exists($reflector, 'isClosure') ? new FunctionTest($name) : new ClassTest($name);
+        return method_exists($reflector, 'isClosure') ? new FunctionTest($name) : new ClassTest(new $name);
     }
 }
 

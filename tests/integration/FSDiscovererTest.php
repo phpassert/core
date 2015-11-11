@@ -34,7 +34,11 @@ class FilesystemDiscovererTest extends \PHPUnit_Framework_TestCase
         $discoverer = new FSDiscoverer($fs->url());
         $tests = $discoverer->findTests();
         $this->assertEquals(array_map(function ($obj) {
-            return new $obj['class']($obj['name']);
+            if (isset($obj['name'])) {
+                return new $obj['class']($obj['name']);
+            } else {
+                return new $obj['class'](new $obj['instance']);
+            }
         }, $testObjects), $tests);
     }
 
@@ -119,7 +123,7 @@ class FilesystemDiscovererTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     [
-                        'name' => 'testSomething',
+                        'instance' => 'testSomething',
                         'class' => ClassTest::class
                     ]
                 ]
@@ -131,11 +135,11 @@ class FilesystemDiscovererTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     [
-                        'name' => 'PHPAssert\\test\\TestA',
+                        'instance' => 'PHPAssert\test\TestA',
                         'class' => ClassTest::class
                     ],
                     [
-                        'name' => 'PHPAssert\\test\\testF',
+                        'name' => 'PHPAssert\test\testF',
                         'class' => FunctionTest::class
                     ]
                 ]
