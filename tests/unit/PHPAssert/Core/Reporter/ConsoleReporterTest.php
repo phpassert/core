@@ -58,19 +58,20 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
     function reportProvider()
     {
         $success = new Result('');
-        $fail = new Result('TestMethod', new \AssertionError());
+        $fail = new Result('TestMethod', new \AssertionError('failed'));
         $trace = $fail->getError()->getTraceAsString();
-
+        $message = $fail->getError()->getMessage();
         return [
             [[], ['No tests were executed']],
             [[$success], ['OK (1 tests)']],
             [[$success, $fail], [
                 '',
-                'There was 1 failure',
-                "1) {$fail->getName()}",
+                'There were 1 failures',
+                "1) {$fail->getName()}: $message",
                 $trace,
+                '',
                 'FAIL (2 tests, 1 failures)'
-            ]]
+            ]],
         ];
     }
 }

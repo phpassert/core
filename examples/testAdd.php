@@ -15,7 +15,12 @@ function testAddVariadic()
 
 function testFail()
 {
-    assert(false);
+    assert(1 == 2);
+}
+
+function testFailWithCustomMessage()
+{
+    assert(2 === 3, new \AssertionError('2 is not equal to 3'));
 }
 
 function add(...$numbers)

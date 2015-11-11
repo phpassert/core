@@ -35,12 +35,14 @@ class ConsoleReporter implements Reporter
             if ($amountOfFailures > 0)
             {
                 $this->writer->writeln('');
-                $this->writer->writeln('There was 1 failure');
+                $this->writer->writeln("There were $amountOfFailures failures");
                 foreach ($failures as $i => $failure)
                 {
+                    $error = $failure->getError();
                     $index = $i + 1;
-                    $this->writer->writeln("{$index}) {$failure->getName()}");
-                    $this->writer->writeln($failure->getError()->getTraceAsString());
+                    $this->writer->writeln("{$index}) {$failure->getName()}: {$error->getMessage()}");
+                    $this->writer->writeln($error->getTraceAsString());
+                    $this->writer->writeln('');
                 }
 
                 $this->writer->writeln("FAIL ($amountOfResults tests, $amountOfFailures failures)");
