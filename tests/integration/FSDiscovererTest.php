@@ -4,6 +4,7 @@ namespace integration\PHPAssert\Core\Discoverer;
 
 use org\bovigo\vfs\vfsStream;
 use PHPAssert\Core\Discoverer\FSDiscoverer;
+use PHPAssert\Core\Test\ClassTest;
 use PHPAssert\Core\Test\FunctionTest;
 
 class FilesystemDiscovererTest extends \PHPUnit_Framework_TestCase
@@ -26,7 +27,7 @@ class FilesystemDiscovererTest extends \PHPUnit_Framework_TestCase
         $discoverer = new FSDiscoverer($fs->url());
         $tests = $discoverer->findTests();
         $this->assertEquals(array_map(function ($obj) {
-            return new $obj['class'](strtolower($obj['name']));
+            return new $obj['class']($obj['name']);
         }, $testObjects), $tests);
     }
 
@@ -48,7 +49,7 @@ class FilesystemDiscovererTest extends \PHPUnit_Framework_TestCase
                 ],
                 [
                     [
-                        'name' => 'testAFunction',
+                        'name' => 'TESTAFunction',
                         'class' => FunctionTest::class
                     ],
                     [
@@ -95,6 +96,39 @@ class FilesystemDiscovererTest extends \PHPUnit_Framework_TestCase
                     ],
                     [
                         'name' => 'testThirdLevelRecursion',
+                        'class' => FunctionTest::class
+                    ]
+                ]
+            ],
+            [
+                [
+                    'testClass.php' => '<?php class ignoremeclass {} ?>'
+                ],
+                []
+            ],
+            [
+                [
+                    'testClass.php' => '<?php class testSomething {}'
+                ],
+                [
+                    [
+                        'name' => 'testSomething',
+                        'class' => ClassTest::class
+                    ]
+                ]
+            ],
+            [
+                [
+                    'testOne.php' => '<?php namespace PHPAssert\\test; function testF() {}',
+                    'testTwo.php' => '<?php namespace PHPAssert\\test; class TestA {}'
+                ],
+                [
+                    [
+                        'name' => 'PHPAssert\\test\\TestA',
+                        'class' => ClassTest::class
+                    ],
+                    [
+                        'name' => 'PHPAssert\\test\\testF',
                         'class' => FunctionTest::class
                     ]
                 ]

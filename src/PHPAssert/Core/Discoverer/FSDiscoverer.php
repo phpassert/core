@@ -2,8 +2,8 @@
 namespace PHPAssert\Core\Discoverer;
 
 
+use PHPAssert\Core\Test\ClassTest;
 use PHPAssert\Core\Test\FunctionTest;
-use Underscore\Types\Arrays;
 use Underscore\Types\Strings;
 
 class FSDiscoverer
@@ -28,23 +28,39 @@ class FSDiscoverer
             }
         }
 
-        $functions = get_defined_functions()['user'];
-        $functions = array_filter($functions, function(\string $name) use($fileNames) {
-            $reflector = new \ReflectionFunction($name);
-            return in_array($reflector->getFileName(), $fileNames)
-                && (Strings::startsWith($name, 'test') || Strings::endsWith($name, 'test'));
-        });
-
-        $tests = array_map(function($name) {
-            return new FunctionTest($name);
-        }, $functions);
-
-        return array_merge([], $tests);
+        return $this->findTestsInFiles($fileNames);
     }
 
     function getRoot()
     {
         return $this->root;
+    }
+
+    private function findTestsInFiles($files)
+    {
+        $tests = [];
+        foreach (array_merge(get_declared_classes(), get_defined_functions()['user']) as $name) {
+            try {
+                $reflector = new \ReflectionFunction($name);
+            } catch (\ReflectionException $e) {
+                $reflector = new \ReflectionClass($name);
+            } finally {
+                $shortName = strtolower($reflector->getShortName());
+                if (in_array($reflector->getFileName(), $files)
+                    && (Strings::startsWith($shortName, 'test') || Strings::endsWith($shortName, 'test'))
+                ) {
+                    $tests[] = $this->convertReflectorToTest($reflector);
+                }
+            }
+        }
+
+        return $tests;
+    }
+
+    private function convertReflectorToTest($reflector)
+    {
+        $name = $reflector->getName();
+        return method_exists($reflector, 'isClosure') ? new FunctionTest($name) : new ClassTest($name);
     }
 }
 
@@ -67,6 +83,6 @@ class FilenameFilter extends FilesystemRegexFilter
         return
             !$this->isFile() ||
             ((Strings::startsWith($name, 'test') || Strings::endsWith($name, 'test'))
-            && preg_match($this->regex, $this->getFilename()));
+                && preg_match($this->regex, $this->getFilename()));
     }
 }
