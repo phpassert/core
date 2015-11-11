@@ -3,6 +3,7 @@ namespace PHPAssert\Core\Discoverer;
 
 
 use PHPAssert\Core\Test\FunctionTest;
+use Underscore\Types\Arrays;
 use Underscore\Types\Strings;
 
 class FSDiscoverer
@@ -17,20 +18,26 @@ class FSDiscoverer
     function findTests()
     {
         $directory = new \RecursiveDirectoryIterator($this->root);
-        $iterator = new \RecursiveIteratorIterator($directory);
-        $fileNames = array_map(function(\SplFileInfo $file) {
-            $path = $file->getPathName();
-            require_once($path);
-            return $path;
-        }, iterator_to_array(new \RegexIterator($iterator, '/\.php$/i', \RegexIterator::MATCH)));
+        $filter = new FilenameFilter($directory, '/\.php$/i');
+        $files = iterator_to_array(new \RecursiveIteratorIterator($filter));
 
-        $functions = array_filter(get_defined_functions()['user'], function (\string $name) use ($fileNames) {
+        $fileNames = [];
+        foreach ($files as $file) {
+            if ($file->isFile()) {
+                $path = $file->getPathName();
+                $fileNames[] = $path;
+                require_once($path);
+            }
+        }
+
+        $functions = get_defined_functions()['user'];
+        $functions = array_filter($functions, function(\string $name) use($fileNames) {
             $reflector = new \ReflectionFunction($name);
             return in_array($reflector->getFileName(), $fileNames)
-            && (Strings::startsWith($name, 'test') || Strings::endsWith($name, 'test'));
+                && (Strings::startsWith($name, 'test') || Strings::endsWith($name, 'test'));
         });
 
-        $tests = array_map(function (\string $name) {
+        $tests = array_map(function($name) {
             return new FunctionTest($name);
         }, $functions);
 
@@ -40,5 +47,28 @@ class FSDiscoverer
     function getRoot()
     {
         return $this->root;
+    }
+}
+
+abstract class FilesystemRegexFilter extends \RecursiveRegexIterator
+{
+    protected $regex;
+
+    function __construct(\RecursiveIterator $iterator, $regex)
+    {
+        $this->regex = $regex;
+        parent::__construct($iterator, $regex);
+    }
+}
+
+class FilenameFilter extends FilesystemRegexFilter
+{
+    function accept()
+    {
+        $name = strtolower(pathinfo($this->getFileName())['filename']);
+        return
+            !$this->isFile() ||
+            ((Strings::startsWith($name, 'test') || Strings::endsWith($name, 'test'))
+            && preg_match($this->regex, $this->getFilename()));
     }
 }
