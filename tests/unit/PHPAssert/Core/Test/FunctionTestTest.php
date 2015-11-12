@@ -53,10 +53,20 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($reflector->getName(), $result->getName());
     }
 
+    function testExecutionShouldCollectExecutionTime()
+    {
+        $ms = 10;
+        $test = new FunctionTest(function() use ($ms) {
+            usleep($ms * 1000);
+        });
+        $result = $test->execute()[0];
+        $this->assertGreaterThanOrEqual($ms, $result->getExecutionTimeInMs());
+    }
+
     function testExecuteShouldNotHandleOtherExceptions()
     {
         $this->setExpectedException('Exception');
-        $test = new FunctionTest(function() {
+        $test = new FunctionTest(function () {
             throw new \Exception();
         });
         $test->execute();
