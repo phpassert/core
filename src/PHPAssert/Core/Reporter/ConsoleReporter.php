@@ -25,31 +25,45 @@ class ConsoleReporter implements Reporter
         $amountOfResults = count($results);
         if ($amountOfResults === 0)
         {
-            $this->writer->writeln('No tests were executed');
+            $this->writer->writeln('<comment>No tests were executed</comment>');
         } else {
-            $failures = array_values(array_filter($results, function(Result $result) {
-                return !$result->isSuccess();
-            }));
-
+            $failures = $this->getFailed($results);
             $amountOfFailures = count($failures);
             if ($amountOfFailures > 0)
             {
-                $this->writer->writeln('');
-                $this->writer->writeln("There were $amountOfFailures failures");
-                foreach ($failures as $i => $failure)
-                {
-                    $error = $failure->getError();
-                    $index = $i + 1;
-                    $this->writer->writeln("{$index}) {$failure->getName()}: {$error->getMessage()}");
-                    $this->writer->writeln($error->getTraceAsString());
-                    $this->writer->writeln('');
-                }
-
-                $this->writer->writeln("FAIL ($amountOfResults tests, $amountOfFailures failures)");
+                $this->reportFailures($failures);
+                $this->writer->writeln("<error>FAIL ($amountOfResults tests, $amountOfFailures failures)</error>");
             } else
             {
-                $this->writer->writeln("OK ($amountOfResults tests)");
+                $this->writer->writeln("<info>OK ($amountOfResults tests)</info>");
             }
         }
+    }
+
+    private function getFailed(array $results)
+    {
+        $failures = array_values(array_filter($results, function (Result $result) {
+            return !$result->isSuccess();
+        }));
+        return $failures;
+    }
+
+    private function reportFailures(array $results)
+    {
+        $amount = count($results);
+        $this->writer->writeln('');
+        $this->writer->writeln("There were $amount failures");
+        $this->writer->writeln('');
+        foreach ($results as $i => $failure) {
+            $this->reportFailed($failure, $i + 1);
+        }
+    }
+
+    private function reportFailed(Result $failure, $index)
+    {
+        $error = $failure->getError();
+        $this->writer->writeln("<fg=red>{$index}) {$failure->getName()}: {$error->getMessage()}</>");
+        $this->writer->writeln($error->getTraceAsString());
+        $this->writer->writeln('');
     }
 }

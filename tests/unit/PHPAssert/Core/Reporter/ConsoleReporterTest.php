@@ -62,15 +62,16 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
         $trace = $fail->getError()->getTraceAsString();
         $message = $fail->getError()->getMessage();
         return [
-            [[], ['No tests were executed']],
-            [[$success], ['OK (1 tests)']],
+            [[], ['<comment>No tests were executed</comment>']],
+            [[$success], ['<info>OK (1 tests)</info>']],
             [[$success, $fail], [
                 '',
                 'There were 1 failures',
-                "1) {$fail->getName()}: $message",
+                '',
+                "<fg=red>1) {$fail->getName()}: $message</>",
                 $trace,
                 '',
-                'FAIL (2 tests, 1 failures)'
+                '<error>FAIL (2 tests, 1 failures)</error>'
             ]],
         ];
     }
