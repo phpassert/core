@@ -51,14 +51,14 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
     {
         return [
             [new Result('success'), '.'],
-            [new Result('fail', new \AssertionError()), 'F'],
+            [new Result('fail', 10, new \AssertionError()), 'F'],
         ];
     }
 
     function reportProvider()
     {
         $success = new Result('');
-        $fail = new Result('TestMethod', new \AssertionError('failed'));
+        $fail = new Result('TestMethod', 10, new \AssertionError('failed'));
         $trace = $fail->getError()->getTraceAsString();
         $message = $fail->getError()->getMessage();
         return [

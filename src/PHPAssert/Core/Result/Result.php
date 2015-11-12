@@ -4,12 +4,14 @@ namespace PHPAssert\Core\Result;
 
 class Result
 {
-    private $error;
     private $name;
+    private $executionTime;
+    private $error;
 
-    function __construct(\string $name, \AssertionError $error = null)
+    function __construct(\string $name, \int $executionTime = 0, \AssertionError $error = null)
     {
         $this->error = $error;
+        $this->executionTime = $executionTime;
         $this->name = $name;
     }
 
@@ -26,6 +28,11 @@ class Result
     function getName(): \string
     {
         return $this->name;
+    }
+
+    function getExecutionTimeInMs()
+    {
+        return $this->executionTime;
     }
 
     function getError()
