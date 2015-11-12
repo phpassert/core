@@ -15,7 +15,7 @@ class ResultTest extends TestCase
 
     function testIsFailure()
     {
-        $result = new Result('f', new \AssertionError());
+        $result = new Result('f', 0, new \AssertionError());
         $this->assertFalse($result->isSuccess());
     }
 
@@ -32,10 +32,18 @@ class ResultTest extends TestCase
         $this->assertSame($name, $result->getName());
     }
 
+    function testGetExecutionTime()
+    {
+        $time = 0;
+        $result = new Result('f', $time);
+        $this->assertSame($time, $result->getExecutionTimeInMs());
+
+    }
+
     function testGetError()
     {
         $error = new \AssertionError();
-        $result = new Result('', $error);
+        $result = new Result('', 0, $error);
         $this->assertSame($error, $result->getError());
     }
 }

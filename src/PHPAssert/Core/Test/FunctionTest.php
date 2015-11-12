@@ -15,9 +15,11 @@ class FunctionTest implements Test
 
     function execute(): array
     {
+        $start = microtime(true);
         $error = $this->tryExecute();
         $name = $this->getFunctionName();
-        return [new Result($name, $error)];
+        $time = (microtime(true) - $start) * 1000;
+        return [new Result($name, (int)$time, $error)];
     }
 
     private function tryExecute()
