@@ -3,9 +3,8 @@ namespace unit\PHPAssert\Core\Result;
 
 
 use PHPAssert\Core\Result\Result;
-use unit\PHPAssert\Core\TestCase\TestCase;
 
-class ResultTest extends TestCase
+class ResultTest extends \PHPUnit_Framework_TestCase
 {
     function testIsSuccess()
     {
