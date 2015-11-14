@@ -16,8 +16,7 @@ class ConsoleReporter implements Reporter
 
     function notify(Result $result)
     {
-        $output = $result->isSuccess() ? '.' : 'F';
-        $this->writer->write($output);
+        $this->writer->write($result->getSymbol());
     }
 
     function report(array $results)

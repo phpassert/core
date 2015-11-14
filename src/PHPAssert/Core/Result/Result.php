@@ -8,7 +8,7 @@ class Result
     private $executionTime;
     private $error;
 
-    function __construct(\string $name, \int $executionTime = 0, \AssertionError $error = null)
+    function __construct(\string $name, \int $executionTime = 0, \Throwable $error = null)
     {
         $this->error = $error;
         $this->executionTime = $executionTime;
@@ -38,5 +38,15 @@ class Result
     function getError()
     {
         return $this->error;
+    }
+
+    function getSymbol(): \string
+    {
+        return $this->error === null ? '.' : $this->getFailingSymbol();
+    }
+
+    protected function getFailingSymbol(): \string
+    {
+        return 'F';
     }
 }
