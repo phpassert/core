@@ -9,6 +9,11 @@ class SkipResult extends Result
         return true;
     }
 
+    function getSymbol(): \string
+    {
+        return 'S';
+    }
+
     function isSkipped(): \bool
     {
         return true;
