@@ -72,11 +72,13 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
         $exceptionMessage = $exception->getError()->getMessage();
         return [
             [[], [
+                '',
                 'Time: 0 ms',
                 '',
                 '<comment>No tests were executed</comment>'
             ]],
             [[$success], [
+                '',
                 'Time: 10 ms',
                 '',
                 '<info>OK (1 tests 0 skipped)</info>'
@@ -86,6 +88,7 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
                 'There were 1 skipped',
                 '',
                 "<fg=yellow>1) {$skip->getName()}: {$skip->getError()->getMessage()}</>",
+                '',
                 '',
                 'Time: 10 ms',
                 '',
@@ -105,6 +108,7 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
                 '',
                 "<fg=red>2) {$exception->getName()}: $exceptionMessage</>",
                 $exception->getError()->getTraceAsString(),
+                '',
                 '',
                 'Time: 40 ms',
                 '',
