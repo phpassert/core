@@ -4,6 +4,7 @@ namespace unit\PHPAssert\Core\Reporter;
 
 use PHPAssert\Core\Reporter\ConsoleReporter;
 use PHPAssert\Core\Reporter\Reporter;
+use PHPAssert\Core\Result\ExceptionResult;
 use PHPAssert\Core\Result\Result;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -52,6 +53,7 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
         return [
             [new Result('success'), '.'],
             [new Result('fail', 10, new \AssertionError()), 'F'],
+            [new ExceptionResult('error', 10, new \Exception()), 'E']
         ];
     }
 
@@ -59,9 +61,12 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
     {
         $success = new Result('', 10);
         $fail = new Result('TestMethod', 10, new \AssertionError('failed'));
+        $exception = new Result('exception', 10, new \Exception('exception throw'));
 
         $trace = $fail->getError()->getTraceAsString();
         $message = $fail->getError()->getMessage();
+
+        $exceptionMessage = $exception->getError()->getMessage();
         return [
             [[], [
                 'Time: 0 ms',
@@ -73,16 +78,19 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
                 '',
                 '<info>OK (1 tests)</info>'
             ]],
-            [[$success, $fail], [
+            [[$success, $fail, $exception], [
                 '',
-                'There were 1 failures',
+                'There were 2 failures',
                 '',
                 "<fg=red>1) {$fail->getName()}: $message</>",
                 $trace,
                 '',
-                'Time: 20 ms',
+                "<fg=red>2) {$exception->getName()}: $exceptionMessage</>",
+                $exception->getError()->getTraceAsString(),
                 '',
-                '<error>FAIL (2 tests, 1 failures)</error>'
+                'Time: 30 ms',
+                '',
+                '<error>FAIL (3 tests, 2 failures)</error>'
             ]],
         ];
     }

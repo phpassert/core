@@ -46,4 +46,20 @@ class ResultTest extends TestCase
         $result = new Result('', 0, $error);
         $this->assertSame($error, $result->getError());
     }
+
+    /**
+     * @dataProvider resultProvider
+     */
+    function testGetSymbol(Result $result, \string $expected)
+    {
+        $this->assertSame($expected, $result->getSymbol());
+    }
+
+    function resultProvider()
+    {
+        return [
+            [new Result('', 0), '.'],
+            [new Result('', 0, new \AssertionError()), 'F']
+        ];
+    }
 }

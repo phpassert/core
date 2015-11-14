@@ -26,7 +26,7 @@ class FunctionTest implements Test
     {
         try {
             call_user_func($this->function);
-        } catch (\AssertionError $error) {
+        } catch (\Throwable $error) {
             return $error;
         }
     }
