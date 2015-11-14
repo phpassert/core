@@ -97,6 +97,7 @@ class ConsoleReporter implements Reporter
             return $result->getExecutionTimeInMs();
         }, $results));
 
+        $this->writer->writeln('');
         $this->writer->writeln("Time: $time ms");
         $this->writer->writeln('');
         $this->writer->writeln($message);
