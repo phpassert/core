@@ -2,8 +2,10 @@
 namespace PHPAssert\Core\Test;
 
 
+use PHPAssert\Core\Error\SkipException;
 use PHPAssert\Core\Result\ExceptionResult;
 use PHPAssert\Core\Result\Result;
+use PHPAssert\Core\Result\SkipResult;
 
 class FunctionTest implements Test
 {
@@ -16,18 +18,18 @@ class FunctionTest implements Test
 
     function execute(): array
     {
-        return [$this->tryExecute()];
+        return [$this->tryExecute(microtime(true), $this->getFunctionName())];
     }
 
-    private function tryExecute()
+    private function tryExecute($start, $name)
     {
-        $start = microtime(true);
-        $name = $this->getFunctionName();
         try {
             call_user_func($this->function);
             return new Result($name, $this->getExecutionTime($start));
         } catch (\Error $e) {
             return new Result($name, $this->getExecutionTime($start), $e);
+        } catch (SkipException $e) {
+            return new SkipResult($name, $this->getExecutionTime($start), $e);
         } catch (\Exception $e) {
             return new ExceptionResult($name, $this->getExecutionTime($start), $e);
         }

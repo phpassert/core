@@ -2,10 +2,12 @@
 namespace unit\PHPAssert\Core\Reporter;
 
 
+use PHPAssert\Core\Error\SkipException;
 use PHPAssert\Core\Reporter\ConsoleReporter;
 use PHPAssert\Core\Reporter\Reporter;
 use PHPAssert\Core\Result\ExceptionResult;
 use PHPAssert\Core\Result\Result;
+use PHPAssert\Core\Result\SkipResult;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
@@ -62,6 +64,7 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
         $success = new Result('', 10);
         $fail = new Result('TestMethod', 10, new \AssertionError('failed'));
         $exception = new Result('exception', 10, new \Exception('exception throw'));
+        $skip = new SkipResult('skipped', 10, new SkipException('not yet implemented'));
 
         $trace = $fail->getError()->getTraceAsString();
         $message = $fail->getError()->getMessage();
@@ -76,9 +79,24 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
             [[$success], [
                 'Time: 10 ms',
                 '',
-                '<info>OK (1 tests)</info>'
+                '<info>OK (1 tests 0 skipped)</info>'
             ]],
-            [[$success, $fail, $exception], [
+            [[$skip], [
+                '',
+                'There were 1 skipped',
+                '',
+                "<fg=yellow>1) {$skip->getName()}: {$skip->getError()->getMessage()}",
+                '',
+                'Time: 10 ms',
+                '',
+                '<info>OK (1 tests 1 skipped)</info>'
+            ]],
+            [[$success, $fail, $exception, $skip], [
+                '',
+                'There were 1 skipped',
+                '',
+                "<fg=yellow>1) {$skip->getName()}: {$skip->getError()->getMessage()}",
+                '',
                 '',
                 'There were 2 failures',
                 '',
@@ -88,9 +106,9 @@ class ConsoleReporterTest extends \PHPUnit_Framework_TestCase
                 "<fg=red>2) {$exception->getName()}: $exceptionMessage</>",
                 $exception->getError()->getTraceAsString(),
                 '',
-                'Time: 30 ms',
+                'Time: 40 ms',
                 '',
-                '<error>FAIL (3 tests, 2 failures)</error>'
+                '<error>FAIL (4 tests, 2 failures 1 skipped)</error>'
             ]],
         ];
     }

@@ -2,8 +2,10 @@
 namespace unit\PHPAssert\Core\Test;
 
 
+use PHPAssert\Core\Error\SkipException;
 use PHPAssert\Core\Result\ExceptionResult;
 use PHPAssert\Core\Result\Result;
+use PHPAssert\Core\Result\SkipResult;
 use PHPAssert\Core\Test\FunctionTest;
 use PHPAssert\Core\Test\Test;
 
@@ -45,13 +47,22 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
 
     function testExecuteShouldCatchException()
     {
-        $test = new FunctionTest(function() {
+        $test = new FunctionTest(function () {
             throw new \Exception();
         });
 
         $result = $test->execute()[0];
         $this->assertInstanceOf(ExceptionResult::class, $result);
-        $this->assertFalse($result->isSuccess());
+    }
+
+    function testExecutionShouldCatchSkipped()
+    {
+        $test = new FunctionTest(function() {
+            throw new SkipException();
+        });
+
+        $result = $test->execute()[0];
+        $this->assertInstanceOf(SkipResult::class, $result);
     }
 
     function testExecutionShouldCollectName()

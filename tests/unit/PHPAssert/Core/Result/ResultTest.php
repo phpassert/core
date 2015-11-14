@@ -3,9 +3,8 @@ namespace unit\PHPAssert\Core\Result;
 
 
 use PHPAssert\Core\Result\Result;
-use unit\PHPAssert\Core\TestCase\TestCase;
 
-class ResultTest extends TestCase
+class ResultTest extends \PHPUnit_Framework_TestCase
 {
     function testIsSuccess()
     {
@@ -53,6 +52,14 @@ class ResultTest extends TestCase
     function testGetSymbol(Result $result, \string $expected)
     {
         $this->assertSame($expected, $result->getSymbol());
+    }
+
+    /**
+     * @dataProvider resultProvider
+     */
+    function testIsSkipped(Result $result)
+    {
+        $this->assertFalse($result->isSkipped());
     }
 
     function resultProvider()
