@@ -16,6 +16,14 @@ class ExceptionResultTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider resultProvider
      */
+    function testIsSkipped(ExceptionResult $result)
+    {
+        $this->assertFalse($result->isSkipped());
+    }
+
+    /**
+     * @dataProvider resultProvider
+     */
     function testGetSymbol(ExceptionResult $result, \string $symbol)
     {
         $this->assertSame($symbol, $result->getSymbol());

@@ -45,6 +45,11 @@ class Result
         return $this->error === null ? '.' : $this->getFailingSymbol();
     }
 
+    function isSkipped(): \bool
+    {
+        return false;
+    }
+
     protected function getFailingSymbol(): \string
     {
         return 'F';

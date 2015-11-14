@@ -54,6 +54,14 @@ class ResultTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, $result->getSymbol());
     }
 
+    /**
+     * @dataProvider resultProvider
+     */
+    function testIsSkipped(Result $result)
+    {
+        $this->assertFalse($result->isSkipped());
+    }
+
     function resultProvider()
     {
         return [
