@@ -1,7 +1,7 @@
 {
   "name": "phpassert/core",
   "description": "The core of phpassert",
-  "minimum-stability": "alpha",
+  "minimum-stability": "beta",
   "license": "MIT",
   "scripts": {
     "test": "php vendor/bin/phpunit",
