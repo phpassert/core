@@ -2,6 +2,7 @@
 namespace PHPAssert\Core\Test;
 
 
+use PHPAssert\Core\Result\ExceptionResult;
 use PHPAssert\Core\Result\Result;
 
 class FunctionTest implements Test
@@ -15,19 +16,20 @@ class FunctionTest implements Test
 
     function execute(): array
     {
-        $start = microtime(true);
-        $error = $this->tryExecute();
-        $name = $this->getFunctionName();
-        $time = (microtime(true) - $start) * 1000;
-        return [new Result($name, (int)$time, $error)];
+        return [$this->tryExecute()];
     }
 
     private function tryExecute()
     {
+        $start = microtime(true);
+        $name = $this->getFunctionName();
         try {
             call_user_func($this->function);
-        } catch (\Throwable $error) {
-            return $error;
+            return new Result($name, $this->getExecutionTime($start));
+        } catch (\Error $e) {
+            return new Result($name, $this->getExecutionTime($start), $e);
+        } catch (\Exception $e) {
+            return new ExceptionResult($name, $this->getExecutionTime($start), $e);
         }
     }
 
@@ -42,5 +44,10 @@ class FunctionTest implements Test
         return is_array($this->function)
             ? new \ReflectionMethod($this->function[0], $this->function[1])
             : new \ReflectionFunction($this->function);
+    }
+
+    private function getExecutionTime($start)
+    {
+        return (microtime(true) - $start) * 1000;
     }
 }
