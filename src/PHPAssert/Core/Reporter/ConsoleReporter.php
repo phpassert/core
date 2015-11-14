@@ -3,6 +3,7 @@ namespace PHPAssert\Core\Reporter;
 
 
 use PHPAssert\Core\Result\Result;
+use PHPAssert\Core\Result\SkipResult;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ConsoleReporter implements Reporter
@@ -25,12 +26,17 @@ class ConsoleReporter implements Reporter
         $message = '<comment>No tests were executed</comment>';
         if ($amountOfResults > 0) {
             $failures = $this->getFailed($results);
-            $amountOfFailures = count($failures);
-            if ($amountOfFailures > 0) {
+            $skipped = $this->getSkipped($results);
+
+            if (count($skipped) > 0) {
+                $this->reportSkipped($skipped);
+            }
+
+            if (count($failures) > 0) {
                 $this->reportFailures($failures);
-                $message = "<error>FAIL ($amountOfResults tests, $amountOfFailures failures)</error>";
+                $message = "<error>FAIL ($amountOfResults tests, " . count($failures) . " failures " . count($skipped) . " skipped)</error>";
             } else {
-                $message = "<info>OK ($amountOfResults tests)</info>";
+                $message = "<info>OK ($amountOfResults tests ". count($skipped) ." skipped)</info>";
             }
         }
 
@@ -44,11 +50,17 @@ class ConsoleReporter implements Reporter
         }));
     }
 
+    private function getSkipped(array $results)
+    {
+        return array_values(array_filter($results, function (Result $result) {
+            return $result->isSkipped();
+        }));
+    }
+
     private function reportFailures(array $results)
     {
-        $amount = count($results);
         $this->writer->writeln('');
-        $this->writer->writeln("There were $amount failures");
+        $this->writer->writeln('There were ' . count($results) . ' failures');
         $this->writer->writeln('');
         foreach ($results as $i => $failure) {
             $this->reportFailed($failure, $i + 1);
@@ -60,6 +72,22 @@ class ConsoleReporter implements Reporter
         $error = $failure->getError();
         $this->writer->writeln("<fg=red>{$index}) {$failure->getName()}: {$error->getMessage()}</>");
         $this->writer->writeln($error->getTraceAsString());
+        $this->writer->writeln('');
+    }
+
+    private function reportSkipped(array $results)
+    {
+        $this->writer->writeln('');
+        $this->writer->writeln('There were ' . count($results) . ' skipped');
+        $this->writer->writeln('');
+        foreach ($results as $i => $skip) {
+            $this->reportSkip($skip, $i + 1);
+        }
+    }
+
+    private function reportSkip(SkipResult $result, $index)
+    {
+        $this->writer->writeln("<fg=yellow>$index) {$result->getName()}: {$result->getError()->getMessage()}");
         $this->writer->writeln('');
     }
 
