@@ -16,6 +16,14 @@ class SkipResultTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider resultProvider
      */
+    function testGetSymbol(SkipResult $result)
+    {
+        $this->assertSame('S', $result->getSymbol());
+    }
+
+    /**
+     * @dataProvider resultProvider
+     */
     function testIsSuccess(SkipResult $result)
     {
         $this->assertTrue($result->isSuccess());
