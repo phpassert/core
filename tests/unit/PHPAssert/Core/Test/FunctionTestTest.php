@@ -2,6 +2,7 @@
 namespace unit\PHPAssert\Core\Test;
 
 
+use PHPAssert\Core\Result\ExceptionResult;
 use PHPAssert\Core\Result\Result;
 use PHPAssert\Core\Test\FunctionTest;
 use PHPAssert\Core\Test\Test;
@@ -49,6 +50,7 @@ class FunctionTestTest extends \PHPUnit_Framework_TestCase
         });
 
         $result = $test->execute()[0];
+        $this->assertInstanceOf(ExceptionResult::class, $result);
         $this->assertFalse($result->isSuccess());
     }
 
