@@ -87,7 +87,7 @@ class ConsoleReporter implements Reporter
 
     private function reportSkip(SkipResult $result, $index)
     {
-        $this->writer->writeln("<fg=yellow>$index) {$result->getName()}: {$result->getError()->getMessage()}");
+        $this->writer->writeln("<fg=yellow>$index) {$result->getName()}: {$result->getError()->getMessage()}</>");
         $this->writer->writeln('');
     }
 
